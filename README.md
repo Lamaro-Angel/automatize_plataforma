@@ -31,4 +31,4 @@ Testado contra o DeskcommCRM `main` no commit `7c2c3c7` (13/11/2026). Atualizar:
 
 ## Protótipo anterior
 
-O servidor próprio da fase 0 (agente, agenda e base de dados feitos de raiz) ficou guardado na etiqueta `prototipo-fase0`. Foi substituído porque o DeskcommCRM já faz tudo isso, testado em produção.
+O servidor próprio da fase 0 (agente, agenda e base de dados feitos de raiz) continua no histórico do repositório (commit `d7d132d`). Foi substituído porque o DeskcommCRM já faz tudo isso, testado em produção.
