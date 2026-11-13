@@ -1,36 +1,34 @@
 # Automatize — Plataforma
 
-O "motor" da Automatize: agentes de WhatsApp (Margarida Matias e Marina Manuel) que respondem aos clientes de cada negócio, marcam na agenda e enviam lembretes. Mais tarde entram os agentes de voz e os assistentes pessoais Jasper e Jasmin (ver o plano em PDF).
+A plataforma da Automatize assenta no **[DeskcommCRM](https://github.com/melgarafael/DeskcommCRM)**, um CRM de WhatsApp com agentes de IA, de código aberto (licença MIT). Decisão do dono em 13/11/2026: usar o DeskcommCRM como base, com o **canal oficial da Meta** (WhatsApp Cloud API).
 
-## Estado: fase 0 (base técnica)
+## Porque não copiamos o código para aqui
 
-| Parte | Ficheiro | Estado |
-|---|---|---|
-| Servidor e webhook do WhatsApp | `src/server.ts`, `src/whatsapp.ts` | Pronto, à espera das chaves |
-| Agente (Claude + ferramentas de agenda) | `src/agent.ts`, `src/personas.ts` | Pronto, à espera da chave |
-| Cálculo de vagas e lembretes | `src/agenda.ts` | Pronto |
-| Dados | `src/store.ts` (memória), `supabase/migrations/` | Memória agora; Supabase na fase 1 |
-| Painel do cliente | — | Fase 1 |
+O DeskcommCRM foi feito para ser personalizado **por configuração**, sem alterar o código: nome, logótipo, país, moeda, fuso horário, canal da Meta e agentes definem-se no `.env` e nas telas de administração. Se alterássemos o código, perdíamos as atualizações que o autor publica quase todos os dias (mais de 17 mil alterações até hoje).
 
-## Como correr
+Por isso este repositório guarda só **o que é da Automatize**:
 
-```bash
-npm install
-cp .env.example .env   # preencha as chaves (nunca envie o .env para o GitHub)
-npm test               # testes, sem rede e sem chaves
-npm run dev            # servidor em http://localhost:3000
-```
+| Pasta | O que tem |
+|---|---|
+| `instalacao/` | Guia passo a passo e as variáveis da Automatize para o `.env` |
+| `agentes/` | Instruções da Margarida Matias e da Marina Manuel, e o foco de cada setor |
+| `LICENCA-TERCEIROS.md` | Aviso da licença MIT do DeskcommCRM (obrigatório manter) |
 
-`GET /health` mostra quais chaves ainda faltam.
+## O que o DeskcommCRM já traz (e já não precisamos de construir)
 
-## Ligar ao WhatsApp (quando houver chaves)
+- Caixa de entrada do WhatsApp em tempo real, com várias pessoas e vários números.
+- Canal oficial da Meta (tela Admin › API Oficial), além do canal por código QR.
+- Agentes de IA com Claude (Anthropic), base de conhecimento por cliente e passagem para humano.
+- Agenda completa: horários por serviço, vagas livres, marcar, remarcar, cancelar, confirmar, lembretes e Google Agenda.
+- Funil de vendas, contactos, etiquetas, automações QUANDO/SE/ENTÃO.
+- Angola já suportada: fuso de Luanda, kwanza (AOA) e formato de números de Angola.
+- Vários negócios na mesma instalação, cada um só vê os seus dados.
+- Trabalhador de voz (SIP), base para os agentes de voz da fase 3.
 
-1. No Meta for Developers, crie a app do tipo Business e adicione o produto WhatsApp.
-2. Copie o token, o Phone Number ID e o App Secret para o `.env`.
-3. Em Webhooks, use o endereço público `https://SEU-DOMINIO/webhook` e o mesmo `META_VERIFY_TOKEN` do `.env`. Subscreva o campo `messages`.
+## Versão de referência
 
-## Notas do agente
+Testado contra o DeskcommCRM `main` no commit `7c2c3c7` (13/11/2026). Atualizar: ver `instalacao/GUIA.md`.
 
-- Modelo `claude-opus-5-5`, com reserva automática ativada (`fallbacks: "default"`): se o modelo principal recusar um pedido por política, a API tenta outro modelo sozinha.
-- O agente nunca inventa horários: consulta `ver_vagas` e o servidor volta a confirmar a vaga antes de marcar.
-- Um cliente só pode ver e cancelar as próprias marcações.
+## Protótipo anterior
+
+O servidor próprio da fase 0 (agente, agenda e base de dados feitos de raiz) continua no histórico do repositório (commit `d7d132d`). Foi substituído porque o DeskcommCRM já faz tudo isso, testado em produção.
